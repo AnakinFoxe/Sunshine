@@ -2,12 +2,12 @@
 <resources>
 
     <string-array name="pref_temperature_unit_entries">
-        <item>@string/pref_temperature_unit_label_metric</item>
-        <item>@string/pref_temperature_unit_label_imperial</item>
+        <item>@string/pref_units_label_metric</item>
+        <item>@string/pref_units_label_imperial</item>
     </string-array>
     
     <string-array name="pref_temperature_unit_values">
-        <item>@string/pref_temperature_unit_value_metric</item>
-        <item>@string/pref_temperature_unit_value_imperial</item>
+        <item>@string/pref_units_metric</item>
+        <item>@string/pref_units_imperial</item>
     </string-array>
 </resources>

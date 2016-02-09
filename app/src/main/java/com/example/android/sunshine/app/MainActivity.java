@@ -12,13 +12,17 @@ import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity {
 
+    private final String FORECASTFRAGMENT_TAG = "FFTAG";
+
+    private String mLocation;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new ForecastFragment())
+                    .add(R.id.container, new ForecastFragment(), FORECASTFRAGMENT_TAG)
                     .commit();
         }
     }
@@ -46,9 +50,7 @@ public class MainActivity extends AppCompatActivity {
             }
             case R.id.action_map: {
                 // get current set location
-                SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
-                String location = pref.getString(getString(R.string.pref_location_key),
-                                                getString(R.string.pref_location_default));
+                String location = Utility.getPreferredLocation(this);
                 Uri geoLocation = Uri.parse("geo:0,0?").buildUpon()
                                     .appendQueryParameter("q", location)
                                     .build();
@@ -67,5 +69,18 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
 
+        String location = Utility.getPreferredLocation(this);
+        if (location != null && !location.equals(mLocation)) {
+            ForecastFragment ff = (ForecastFragment) getSupportFragmentManager()
+                    .findFragmentByTag(FORECASTFRAGMENT_TAG);
+            if (ff != null)
+                ff.onLocationChanged();
+
+            mLocation = location;
+        }
+    }
 }
