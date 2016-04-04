@@ -45,8 +45,14 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         if (savedInstanceState == null) {
+            Bundle arguments = new Bundle();
+            arguments.putParcelable(DetailFragment.DETAIL_URI, getIntent().getData());
+
+            DetailFragment fragment = new DetailFragment();
+            fragment.setArguments(arguments);
+
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new DetailFragment())
+                    .add(R.id.weather_detail_container, fragment)
                     .commit();
         }
     }
@@ -77,116 +83,4 @@ public class DetailActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class DetailFragment extends Fragment
-            implements LoaderManager.LoaderCallbacks<Cursor> {
-
-        private static final String LOG_TAG = DetailFragment.class.getSimpleName();
-
-        private static final String FORECAST_SHARE_HASHTAG = " #SunshineApp";
-
-        private ShareActionProvider mShareActionProvider;
-        private String mForecastStr;
-
-        private static final int DETAIL_LOADER = 0;
-
-        private static final String[] FORECAST_COLUMNS = {
-                WeatherContract.WeatherEntry.TABLE_NAME + "." + WeatherContract.WeatherEntry._ID,
-                WeatherContract.WeatherEntry.COLUMN_DATE,
-                WeatherContract.WeatherEntry.COLUMN_SHORT_DESC,
-                WeatherContract.WeatherEntry.COLUMN_MAX_TEMP,
-                WeatherContract.WeatherEntry.COLUMN_MIN_TEMP,
-        };
-
-        // these constants correspond to the projection defined above, and must change if the
-        // projection changes
-        private static final int COL_WEATHER_ID = 0;
-        private static final int COL_WEATHER_DATE = 1;
-        private static final int COL_WEATHER_DESC = 2;
-        private static final int COL_WEATHER_MAX_TEMP = 3;
-        private static final int COL_WEATHER_MIN_TEMP = 4;
-
-        public DetailFragment() {
-            setHasOptionsMenu(true);
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-
-            View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
-
-            return rootView;
-        }
-
-        @Override
-        public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-            inflater.inflate(R.menu.detailfragment, menu);
-
-            MenuItem share = menu.findItem(R.id.action_share);
-            mShareActionProvider =
-                    (ShareActionProvider) MenuItemCompat.getActionProvider(share);
-
-            if (mForecastStr != null)
-                mShareActionProvider.setShareIntent(createShareForecastIntent());
-        }
-
-        private Intent createShareForecastIntent() {
-            Intent shareIntent = new Intent(Intent.ACTION_SEND);
-            shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-            shareIntent.setType("text/plain");
-            shareIntent.putExtra(Intent.EXTRA_TEXT, mForecastStr + FORECAST_SHARE_HASHTAG);
-
-            return shareIntent;
-        }
-
-        @Override
-        public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-            getLoaderManager().initLoader(DETAIL_LOADER, null, this);
-            super.onActivityCreated(savedInstanceState);
-        }
-
-        @Override
-        public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-            Intent intent = getActivity().getIntent();
-            if (intent == null)
-                return null;
-
-            return new CursorLoader(
-                    getActivity(),
-                    intent.getData(),
-                    FORECAST_COLUMNS,
-                    null,
-                    null,
-                    null
-            );
-        }
-
-        @Override
-        public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-            if (!data.moveToFirst()) return;
-
-            String dateString = Utility.formatDate(data.getLong(COL_WEATHER_DATE));
-            String weatherDesc = data.getString(COL_WEATHER_DESC);
-            boolean isMetric = Utility.isMetric(getActivity());
-            String high = Utility.formatTemperature(data.getDouble(COL_WEATHER_MAX_TEMP), isMetric);
-            String low = Utility.formatTemperature(data.getDouble(COL_WEATHER_MIN_TEMP), isMetric);
-
-            mForecastStr = String.format("%s - %s - %s/%s", dateString, weatherDesc, high, low);
-
-            TextView detailTextView = (TextView) getView().findViewById(R.id.forecast_detail);
-            detailTextView.setText(mForecastStr);
-
-            // If onCreateOptionsMenu has already happened, we need to update the share intent now.
-            if (mShareActionProvider != null)
-                mShareActionProvider.setShareIntent(createShareForecastIntent());
-        }
-
-        @Override
-        public void onLoaderReset(Loader<Cursor> loader) {
-
-        }
-    }
 }
