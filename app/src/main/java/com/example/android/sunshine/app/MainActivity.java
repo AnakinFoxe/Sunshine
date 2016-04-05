@@ -9,6 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.android.sunshine.app.sync.SunshineSyncAdapter;
+
 
 public class MainActivity extends AppCompatActivity implements ForecastFragment.Callback {
 
@@ -43,6 +45,8 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
                 .findFragmentById(R.id.fragment_forecast);
         forecastFragment.setmUseTodayLayout(!mTwoPane);
 
+
+        SunshineSyncAdapter.initializeSyncAdapter(this);
     }
 
     @Override
@@ -64,19 +68,6 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
             case R.id.action_settings: {
                 Intent intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent);
-                break;
-            }
-            case R.id.action_map: {
-                // get current set location
-                String location = Utility.getPreferredLocation(this);
-                Uri geoLocation = Uri.parse("geo:0,0?").buildUpon()
-                                    .appendQueryParameter("q", location)
-                                    .build();
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(geoLocation);
-                if (intent.resolveActivity(getPackageManager()) != null)
-                    startActivity(intent);
-
                 break;
             }
             default:
