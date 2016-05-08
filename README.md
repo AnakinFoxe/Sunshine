@@ -1,16 +1,28 @@
-Sunshine
-========
+#Sunshine
 
-Sunshine is the companion Android app for the Udacity course [Developing Android Apps: Android Fundamentals](https://www.udacity.com/course/ud853).
+This is a project built for the Udacity course [Developing Android Apps: Android Fundamentals](https://www.udacity.com/course/ud853).
 
-Take the course to find out how to build this app a step at a time, and eventually create your own Android App!
+The app retrieves weather forecast according to given zipcode from openweathermap.org and display in basic form for consecutive days or detail form for a specific day.
 
-This is the second version of the Sunshine code. The repository has been updated on:
+## Features
 
-* **February 13th, 2015** - Major update
-* February 25, 2015 - Minor bug fixes
-* March 4th, 2015 - Minor bug fixes
+* Display weather forecast for consecutive days
+* Display detail weather forecast information for a specified day
+* Sync weather information automatically (everyday)
+* Notify today's weather in notification center
+* Show the given location on Map
+* Offline accessable
 
-For the original version, please go [here](https://github.com/udacity/Sunshine).
+## 3rd Party Android Libraries
 
-A changelog for the course can be found [here](https://docs.google.com/a/knowlabs.com/document/d/193xJb_OpcNCqgquMhxPrMh05IEYFXQqt0S6-6YK8gBw/pub).
+* None
+
+## Screenshots
+
+### Smartphone
+![screen](/screenshots/phone1.png) ![screen](/screenshots/phone2.png)
+![screen](/screenshots/phone3.png) ![screen](/screenshots/phone4.png)
+
+### Tablet
+![screen](/screenshots/tablet1.png)
+
